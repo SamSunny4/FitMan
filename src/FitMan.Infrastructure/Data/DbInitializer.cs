@@ -8,7 +8,8 @@ public static class DbInitializer
 {
     public static async Task InitializeAsync(FitManDbContext context)
     {
-        await context.Database.EnsureCreatedAsync();
+        // Don't use EnsureCreated - it conflicts with migrations
+        // The migration should already be applied by SplashScreenViewModel
 
         // Check if database is already seeded
         if (await context.MembershipTypes.AnyAsync())
@@ -26,7 +27,8 @@ public static class DbInitializer
 
     public static void Initialize(FitManDbContext context)
     {
-        context.Database.EnsureCreated();
+        // Don't use EnsureCreated - it conflicts with migrations
+        // The migration should already be applied
 
         // Check if database is already seeded
         if (context.MembershipTypes.Any())

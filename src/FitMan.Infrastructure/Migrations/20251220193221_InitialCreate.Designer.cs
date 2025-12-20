@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitMan.Infrastructure.Migrations
 {
     [DbContext(typeof(FitManDbContext))]
-    [Migration("20251220190022_InitialCreate")]
+    [Migration("20251220193221_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
