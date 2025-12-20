@@ -10,9 +10,9 @@ public class NavigationService : INavigationService
         var window = App.ServiceProvider.GetRequiredService<T>();
         
         // Close current main window if exists
-        Application.Current.MainWindow?.Close();
+        System.Windows.Application.Current.MainWindow?.Close();
         
-        Application.Current.MainWindow = window;
+        System.Windows.Application.Current.MainWindow = window;
         window.Show();
     }
 
@@ -24,6 +24,6 @@ public class NavigationService : INavigationService
 
     public void CloseCurrentWindow()
     {
-        Application.Current.MainWindow?.Close();
+        System.Windows.Application.Current.MainWindow?.Close();
     }
 }

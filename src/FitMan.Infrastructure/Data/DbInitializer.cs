@@ -6,6 +6,24 @@ namespace FitMan.Infrastructure.Data;
 
 public static class DbInitializer
 {
+    public static async Task InitializeAsync(FitManDbContext context)
+    {
+        await context.Database.EnsureCreatedAsync();
+
+        // Check if database is already seeded
+        if (await context.MembershipTypes.AnyAsync())
+        {
+            return;
+        }
+
+        SeedMembershipTypes(context);
+        await SeedStaffAsync(context);
+        SeedUsers(context);
+        SeedSampleData(context);
+
+        await context.SaveChangesAsync();
+    }
+
     public static void Initialize(FitManDbContext context)
     {
         context.Database.EnsureCreated();
@@ -130,6 +148,50 @@ public static class DbInitializer
 
         context.Staff.AddRange(staff);
         context.SaveChanges(); // Save to get Staff IDs for User creation
+    }
+
+    private static async Task SeedStaffAsync(FitManDbContext context)
+    {
+        var staff = new[]
+        {
+            new Staff
+            {
+                EmployeeCode = "EMP001",
+                FirstName = "Admin",
+                LastName = "User",
+                Phone = "1234567890",
+                Email = "admin@fitman.com",
+                Address = "123 Main St",
+                City = "City",
+                State = "State",
+                ZipCode = "12345",
+                DateOfBirth = new DateTime(1990, 1, 1),
+                Role = StaffRole.Admin,
+                JoinDate = DateTime.UtcNow,
+                Salary = 5000m,
+                IsActive = true
+            },
+            new Staff
+            {
+                EmployeeCode = "EMP002",
+                FirstName = "John",
+                LastName = "Receptionist",
+                Phone = "1234567891",
+                Email = "reception@fitman.com",
+                Address = "124 Main St",
+                City = "City",
+                State = "State",
+                ZipCode = "12345",
+                DateOfBirth = new DateTime(1995, 3, 15),
+                Role = StaffRole.Receptionist,
+                JoinDate = DateTime.UtcNow,
+                Salary = 3000m,
+                IsActive = true
+            }
+        };
+
+        context.Staff.AddRange(staff);
+        await context.SaveChangesAsync(); // Save to get Staff IDs for User creation
     }
 
     private static void SeedUsers(FitManDbContext context)

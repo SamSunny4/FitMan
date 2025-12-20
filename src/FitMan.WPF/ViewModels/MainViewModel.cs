@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.Input;
 using FitMan.WPF.Services;
 using FitMan.WPF.Views;
+using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 
 namespace FitMan.WPF.ViewModels;
@@ -45,25 +46,29 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     private void LoadDashboard()
     {
-        CurrentView = App.ServiceProvider.GetService(typeof(DashboardViewModel));
+        var viewModel = App.ServiceProvider.GetRequiredService<DashboardViewModel>();
+        var view = new Views.DashboardView { DataContext = viewModel };
+        CurrentView = view;
     }
 
     [RelayCommand]
     private void LoadMembers()
     {
-        CurrentView = App.ServiceProvider.GetService(typeof(MemberListViewModel));
+        var viewModel = App.ServiceProvider.GetRequiredService<MemberListViewModel>();
+        var view = new Views.MemberListView { DataContext = viewModel };
+        CurrentView = view;
     }
 
     [RelayCommand]
     private void LoadCheckIn()
     {
-        CurrentView = App.ServiceProvider.GetService(typeof(CheckInViewModel));
+        CurrentView = App.ServiceProvider.GetRequiredService<CheckInViewModel>();
     }
 
     [RelayCommand]
     private void LoadPayments()
     {
-        CurrentView = App.ServiceProvider.GetService(typeof(PaymentViewModel));
+        CurrentView = App.ServiceProvider.GetRequiredService<PaymentViewModel>();
     }
 
     [RelayCommand]

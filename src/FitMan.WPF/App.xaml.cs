@@ -13,7 +13,7 @@ using Serilog;
 
 namespace FitMan.WPF;
 
-public partial class App : Application
+public partial class App : System.Windows.Application
 {
     public static IServiceProvider ServiceProvider { get; private set; } = null!;
     public static IConfiguration Configuration { get; private set; } = null!;
@@ -39,17 +39,6 @@ public partial class App : Application
         var serviceCollection = new ServiceCollection();
         ConfigureServices(serviceCollection);
         ServiceProvider = serviceCollection.BuildServiceProvider();
-
-        // Initialize database
-        using (var scope = ServiceProvider.CreateScope())
-        {
-            var context = scope.ServiceProvider.GetRequiredService<FitManDbContext>();
-            DbInitializer.Initialize(context);
-        }
-
-        // Show login window
-        var loginWindow = ServiceProvider.GetRequiredService<LoginWindow>();
-        loginWindow.Show();
     }
 
     private void ConfigureServices(IServiceCollection services)
@@ -66,8 +55,11 @@ public partial class App : Application
         services.AddSingleton<INavigationService, NavigationService>();
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<FitMan.Application.Interfaces.IDashboardService, FitMan.Infrastructure.Services.DashboardService>();
+        services.AddScoped<FitMan.Application.Interfaces.IMemberService, FitMan.Infrastructure.Services.MemberService>();
 
         // Add ViewModels
+        services.AddTransient<SplashScreenViewModel>();
         services.AddTransient<LoginViewModel>();
         services.AddTransient<MainViewModel>();
         services.AddTransient<DashboardViewModel>();
@@ -77,6 +69,7 @@ public partial class App : Application
         services.AddTransient<PaymentViewModel>();
 
         // Add Windows
+        services.AddTransient<SplashScreenWindow>();
         services.AddTransient<LoginWindow>();
         services.AddTransient<MainWindow>();
     }
